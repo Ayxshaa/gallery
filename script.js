@@ -1,31 +1,49 @@
-import collection from "./collection.js";
-import gsap from "gsap";
-import SplitText from "gsap/SplitText";
+const collection = [
+    { title: "Social life jazz", img: "/photo-1.avif" },
+    { title: "Music with friends", img: "/photo-2.avif" },
+    { title: "Radio jazz", img: "/photo-3.avif" },
+    { title: "Jazz in the city", img: "/photo-4.avif" },
+    { title: "Model jazzzz~", img: "/photo-5.jpg" },
+    { title: "Smile", img: "/photo-6.jpg" },
+    { title: "Statue with the jazz touch", img: "/photo-7.jpg" },
+    { title: "Let your soul dance", img: "/photo-8.jpg" },
+    { title: "Jazz Club", img: "/photo-9.avif" },
+    { title: "Singer", img: "/photo-10.avif" },
+    { title: "Saxophone", img: "/photo-11.avif" },
+    { title: "Books and jazz", img: "/photo-12.avif" },
+    { title: "Lost yourself with books", img: "/photo-13.avif" },
+    { title: "Start and end with the books", img: "/photo-14.avif" },
+    { title: "Purple world", img: "/photo-15.avif" },
+    { title: "Weather is everything", img: "/photo-16.avif" },
+    { title: "Get up in the morning", img: "/photo-17.avif" },
+    { title: "Bird in the sky", img: "/photo-18.avif" },
+    { title: "When the white and jazzz together", img: "/photo-19.avif" },
+    { title: "For the Love of White", img: "/photo-20.avif" }
+];
 
 document.addEventListener("DOMContentLoaded", () => {
     gsap.registerPlugin(SplitText);
 
     const gallery = document.querySelector(".gallery");
     const galleryContainer = document.querySelector(".gallery-container");
-    const titContainer = document.querySelector(".title-container");
+    const titleContainer = document.querySelector(".title-container");
 
-
-    const cards =[];
+    const cards = [];
     const transformState = [];
 
-    let currentTitle  = null;
+    let currentTitle = null;
     let isPreviewActive = false;
     let isTransitioning = false;
 
-    const config  = {
-        imageCount: 5,
+    const config = {
+        imageCount: 8,
         radius: 275,
-        sensitvity: 500,
+        sensitivity: 500,
         effectFalloff: 250,
         cardMoveAmount: 50,
         lerpFactor: 0.15,
-        isMobile : window.innerWidth < 1000,
-    }
+        isMobile: window.innerWidth < 1000,
+    };
 
     const parallaxState = {
         targetX: 0,
@@ -34,15 +52,13 @@ document.addEventListener("DOMContentLoaded", () => {
         currentX: 0,
         currentY: 0,
         currentZ: 0,
-    }
+    };
 
-
-    for(let i = 0; i < config.imageCount; i++){
-        const angle = (i/config.imageCount) * Math.PI * 2;
+    for (let i = 0; i < config.imageCount; i++) {
+        const angle = (i / config.imageCount) * Math.PI * 2;
         const x = config.radius * Math.cos(angle);
         const y = config.radius * Math.sin(angle);
-        const cardIndex  = i % 20;
-
+        const cardIndex = i % collection.length;
 
         const card = document.createElement("div");
         card.className = "card";
@@ -50,14 +66,14 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.title = collection[cardIndex].title;
 
         const img = document.createElement("img");
-        img.src = collection[cardIndex].image;
+        img.src = collection[cardIndex].img;
         card.appendChild(img);
 
         gsap.set(card, {
             x: x,
             y: y,
             z: 0,
-            rotationY: (angle*180)/ Math.PI+90,
+            rotationY: (angle * 180) / Math.PI + 90,
             transformPerspective: 800,
             transformOrigin: "center center -200px",
         });
@@ -65,25 +81,25 @@ document.addEventListener("DOMContentLoaded", () => {
         gallery.appendChild(card);
         cards.push(card);
         transformState.push({
-           currentRotation: 0,
-           targetRotation: 0,
-           currentX: 0,
-           targetX: 0,
-           currentY: 0,
-           targetY: 0,
-           currentScale: 1,
-           targetScale: 1,
-           angle,
+            currentRotation: 0,
+            targetRotation: 0,
+            currentX: 0,
+            targetX: 0,
+            currentY: 0,
+            targetY: 0,
+            currentScale: 1,
+            targetScale: 1,
+            angle,
         });
 
-        card.addEventListener("click", () => {
-            if( !isPreviewActive && !isTransitioning){
-                 togglePreview(parseInt(card.dataset.index));
+        card.addEventListener("click", (e) => {
+            if (!isPreviewActive && !isTransitioning) {
+                togglePreview(parseInt(card.dataset.index));
                 e.stopPropagation();
             }
         });
-
     }
+
 
 
     function togglePreview(index){
